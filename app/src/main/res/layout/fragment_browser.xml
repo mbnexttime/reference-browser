@@ -37,18 +37,14 @@
         android:padding="4dp"
         android:visibility="gone" />
 
-    <mozilla.components.feature.findinpage.view.FindInPageBar
-        android:id="@+id/findInPageBar"
+    <ViewStub
+        android:id="@+id/findInPageBarStub"
+        android:inflatedId="@+id/findInPageBar"
+        android:layout="@layout/find_in_page_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:layout_gravity="bottom"
-        android:background="#000000"
-        mozac:findInPageQueryTextColor="#ffffff"
-        mozac:findInPageQueryHintTextColor="#dddddd"
-        mozac:findInPageResultCountTextColor="#ff88ff"
-        mozac:findInPageButtonsTint="#ff88ff"
-        android:visibility="gone"
-        app:layout_behavior="org.mozilla.reference.browser.browser.FindInPageBarBehavior" />
+        app:layout_behavior="org.mozilla.reference.browser.browser.FindInPageBarBehavior"/>
 
     <mozilla.components.browser.toolbar.BrowserToolbar
         android:id="@+id/toolbar"

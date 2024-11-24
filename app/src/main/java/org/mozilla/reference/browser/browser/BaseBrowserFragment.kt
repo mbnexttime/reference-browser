@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewStub
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.CallSuper
@@ -28,7 +29,6 @@ import mozilla.components.feature.downloads.DownloadsFeature
 import mozilla.components.feature.downloads.manager.FetchDownloadManager
 import mozilla.components.feature.downloads.temporary.ShareDownloadFeature
 import mozilla.components.feature.findinpage.view.FindInPageBar
-import mozilla.components.feature.findinpage.view.FindInPageView
 import mozilla.components.feature.media.fullscreen.MediaSessionFullscreenFeature
 import mozilla.components.feature.prompts.PromptFeature
 import mozilla.components.feature.session.FullScreenFeature
@@ -86,8 +86,11 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
         get() = requireView().findViewById<View>(R.id.engineView) as EngineView
     private val toolbar: BrowserToolbar
         get() = requireView().findViewById(R.id.toolbar)
-    private val findInPageBar: FindInPageBar
-        get() = requireView().findViewById(R.id.findInPageBar)
+    private val findInPageBar: Lazy<FindInPageBar> = lazy(LazyThreadSafetyMode.NONE) {
+        val stub = requireView().findViewById<ViewStub>(R.id.findInPageBarStub)
+        val view = requireView().findViewById<FindInPageBar>(R.id.findInPageBar)
+        view ?: stub.inflate() as FindInPageBar
+    }
     private val swipeRefresh: SwipeRefreshLayout
         get() = requireView().findViewById(R.id.swipeRefresh)
 
@@ -309,7 +312,7 @@ abstract class BaseBrowserFragment : Fragment(), UserInteractionHandler, Activit
             feature = FindInPageIntegration(
                 requireComponents.core.store,
                 sessionId,
-                findInPageBar as FindInPageView,
+                findInPageBar,
                 engineView,
             ),
             owner = this,
